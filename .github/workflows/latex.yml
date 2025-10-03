@@ -6,21 +6,28 @@ on:
   pull_request:
     branches: [ "main" ]
 
+concurrency:
+  group: latex-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build_pdf:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Compile LaTeX document
-        uses: xu-cheng/latex-action@v2
+        uses: xu-cheng/latex-action@v4
         with:
           root_file: main.tex
+          # opcional, fixa versão do TeX Live para reprodutibilidade:
+          # texlive_version: 2024
 
       - name: Upload PDF artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: IADvogado-report
           path: main.pdf
+
